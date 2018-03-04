@@ -2279,9 +2279,9 @@ create_mergejoin_plan(PlannerInfo *root,
 		if (!first_inner_match)
 		{
 			/* redundant clause ... must match something before lip */
-			ipathkey = NULL;
-			ipeclass = NULL;
 			ListCell   *l2;
+			ipathkey = NULL;
+			ipeclass = NULL; 
 			
 			foreach(l2, innerpathkeys)
 			{
