@@ -181,9 +181,8 @@ extern void initialize_mergeclause_eclasses(PlannerInfo *root,
 								RestrictInfo *restrictinfo);
 extern void update_mergeclause_eclasses(PlannerInfo *root,
 							RestrictInfo *restrictinfo);
-extern List *find_mergeclauses_for_pathkeys(PlannerInfo *root,
+extern List *find_mergeclauses_for_outer_pathkeys(PlannerInfo *root,
 							   List *pathkeys,
-							   bool outer_keys,
 							   List *restrictinfos);
 extern List *select_outer_pathkeys_for_merge(PlannerInfo *root,
 								List *mergeclauses,
@@ -191,6 +190,10 @@ extern List *select_outer_pathkeys_for_merge(PlannerInfo *root,
 extern List *make_inner_pathkeys_for_merge(PlannerInfo *root,
 							  List *mergeclauses,
 							  List *outer_pathkeys);
+extern List *trim_mergeclauses_for_inner_pathkeys(PlannerInfo *root,
+ 									 List *mergeclauses,
+									 List *pathkeys);
+
 extern List *truncate_useless_pathkeys(PlannerInfo *root,
 						  RelOptInfo *rel,
 						  List *pathkeys);
