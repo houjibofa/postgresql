@@ -189,10 +189,9 @@ _outBitmapset(StringInfo str, const Bitmapset *bms)
 
 	appendStringInfoChar(str, '(');
 	appendStringInfoChar(str, 'b');
-	tmpset = bms_copy(bms);
-	while ((x = bms_first_member(tmpset)) >= 0)
-		appendStringInfo(str, " %d", x);
-	bms_free(tmpset);
+	x = -1;
+	while ((x = bms_next_member(bms, x)) >= 0) 
+		appendStringInfo(str, " %d", x); 
 	appendStringInfoChar(str, ')');
 }
 

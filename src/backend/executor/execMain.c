@@ -547,8 +547,7 @@ ExecCheckRTEPerms(RangeTblEntry *rte)
 	AclMode		relPerms;
 	AclMode		remainingPerms;
 	Oid			relOid;
-	Oid			userid;
-	Bitmapset  *tmpset;
+	Oid			userid; 
 	int			col;
 
 	/*
@@ -615,12 +614,12 @@ ExecCheckRTEPerms(RangeTblEntry *rte)
 					return false;
 			}
 
-			tmpset = bms_copy(rte->selectedCols);
-			while ((col = bms_first_member(tmpset)) >= 0)
+			col = -1;
+			while ((col = bms_next_member(rte->selectedCols, col)) >=0 )
 			{
-				/* remove the column number offset */
-				col += FirstLowInvalidHeapAttributeNumber;
-				if (col == InvalidAttrNumber)
+				/* bit #s are offset by FirstLowInvalidHeapAttributeNumber */
+				AttrNumber attno = col + FirstLowInvalidHeapAttributeNumber; 
+				if (attno == InvalidAttrNumber)
 				{
 					/* Whole-row reference, must have priv on all cols */
 					if (pg_attribute_aclcheck_all(relOid, userid, ACL_SELECT,
@@ -629,12 +628,11 @@ ExecCheckRTEPerms(RangeTblEntry *rte)
 				}
 				else
 				{
-					if (pg_attribute_aclcheck(relOid, col, userid,
+					if (pg_attribute_aclcheck(relOid, attno, userid,
 											  ACL_SELECT) != ACLCHECK_OK)
 						return false;
 				}
-			}
-			bms_free(tmpset);
+			} 
 		}
 
 		/*
@@ -657,24 +655,24 @@ ExecCheckRTEPerms(RangeTblEntry *rte)
 					return false;
 			}
 
-			tmpset = bms_copy(rte->modifiedCols);
-			while ((col = bms_first_member(tmpset)) >= 0)
+			col = -1;
+			while ((col = bms_next_member(rte->selectedCols, col)) >=0 )
 			{
-				/* remove the column number offset */
-				col += FirstLowInvalidHeapAttributeNumber;
-				if (col == InvalidAttrNumber)
+				/* bit #s are offset by FirstLowInvalidHeapAttributeNumber */
+				AttrNumber attno = col + FirstLowInvalidHeapAttributeNumber; 
+				if (attno == InvalidAttrNumber)
+
 				{
 					/* whole-row reference can't happen here */
 					elog(ERROR, "whole-row update is not implemented");
 				}
 				else
 				{
-					if (pg_attribute_aclcheck(relOid, col, userid,
+					if (pg_attribute_aclcheck(relOid, attno, userid,
 											  remainingPerms) != ACLCHECK_OK)
 						return false;
 				}
-			}
-			bms_free(tmpset);
+			} 
 		}
 	}
 	return true;

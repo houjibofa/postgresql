@@ -99,14 +99,13 @@ add_join_clause_to_rels(PlannerInfo *root,
 	Relids		tmprelids;
 	int			cur_relid;
 
-	tmprelids = bms_copy(join_relids);
-	while ((cur_relid = bms_first_member(tmprelids)) >= 0)
+	cur_relid = -1;
+	while (( cur_relid = bms_next_member(tmprelids, cur_relid)) >= 0) 
 	{
 		RelOptInfo *rel = find_base_rel(root, cur_relid);
 
 		rel->joininfo = lappend(rel->joininfo, restrictinfo);
-	}
-	bms_free(tmprelids);
+	} 
 }
 
 /*
@@ -128,8 +127,8 @@ remove_join_clause_from_rels(PlannerInfo *root,
 	Relids		tmprelids;
 	int			cur_relid;
 
-	tmprelids = bms_copy(join_relids);
-	while ((cur_relid = bms_first_member(tmprelids)) >= 0)
+	cur_relid = -1;
+	while (( cur_relid = bms_next_member(tmprelids, cur_relid)) >= 0)  
 	{
 		RelOptInfo *rel = find_base_rel(root, cur_relid);
 
@@ -139,6 +138,5 @@ remove_join_clause_from_rels(PlannerInfo *root,
 		 */
 		Assert(list_member_ptr(rel->joininfo, restrictinfo));
 		rel->joininfo = list_delete_ptr(rel->joininfo, restrictinfo);
-	}
-	bms_free(tmprelids);
+	} 
 }

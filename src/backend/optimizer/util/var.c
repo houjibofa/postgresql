@@ -904,12 +904,11 @@ flatten_join_alias_vars_mutator(Node *node,
 static Relids
 alias_relid_set(PlannerInfo *root, Relids relids)
 {
-	Relids		result = NULL;
-	Relids		tmprelids;
+	Relids		result = NULL; 
 	int			rtindex;
 
-	tmprelids = bms_copy(relids);
-	while ((rtindex = bms_first_member(tmprelids)) >= 0)
+	rtindex = -1;
+	while ((rtindex = bms_next_member(tmprelids, rtindex)) >= 0) 
 	{
 		RangeTblEntry *rte = rt_fetch(rtindex, root->parse->rtable);
 
@@ -917,7 +916,6 @@ alias_relid_set(PlannerInfo *root, Relids relids)
 			result = bms_join(result, get_relids_for_join(root, rtindex));
 		else
 			result = bms_add_member(result, rtindex);
-	}
-	bms_free(tmprelids);
+	} 
 	return result;
 }

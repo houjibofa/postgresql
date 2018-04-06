@@ -443,14 +443,12 @@ OffsetVarNodes(Node *node, int offset, int sublevels_up)
 static Relids
 offset_relid_set(Relids relids, int offset)
 {
-	Relids		result = NULL;
-	Relids		tmprelids;
+	Relids		result = NULL; 
 	int			rtindex;
 
-	tmprelids = bms_copy(relids);
-	while ((rtindex = bms_first_member(tmprelids)) >= 0)
-		result = bms_add_member(result, rtindex + offset);
-	bms_free(tmprelids);
+	rtindex = -1;
+	while ((rtindex = bms_next_member(tmprelids, rtindex)) >= 0) 
+		result = bms_add_member(result, rtindex + offset); 
 	return result;
 }
 
