@@ -908,7 +908,7 @@ alias_relid_set(PlannerInfo *root, Relids relids)
 	int			rtindex;
 
 	rtindex = -1;
-	while ((rtindex = bms_next_member(tmprelids, rtindex)) >= 0) 
+	while ((rtindex = bms_next_member(relids, rtindex)) >= 0) 
 	{
 		RangeTblEntry *rte = rt_fetch(rtindex, root->parse->rtable);
 

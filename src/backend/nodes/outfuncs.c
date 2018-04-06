@@ -183,8 +183,7 @@ _outList(StringInfo str, const List *node)
  */
 static void
 _outBitmapset(StringInfo str, const Bitmapset *bms)
-{
-	Bitmapset  *tmpset;
+{ 
 	int			x;
 
 	appendStringInfoChar(str, '(');
