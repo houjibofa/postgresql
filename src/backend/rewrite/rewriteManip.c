@@ -447,7 +447,7 @@ offset_relid_set(Relids relids, int offset)
 	int			rtindex;
 
 	rtindex = -1;
-	while ((rtindex = bms_next_member(tmprelids, rtindex)) >= 0) 
+	while ((rtindex = bms_next_member(relids, rtindex)) >= 0) 
 		result = bms_add_member(result, rtindex + offset); 
 	return result;
 }
